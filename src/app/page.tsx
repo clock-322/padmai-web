@@ -50,19 +50,37 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="flex flex-col items-center text-center max-w-4xl mx-auto"
             >
-              {/* Logo */}
+              {/* Logos */}
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", duration: 1, bounce: 0.4 }}
-                className="mb-6 animate-float"
+                className="mb-6 flex items-center gap-6"
               >
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center shadow-2xl animate-pulse-glow overflow-hidden p-2">
+                <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center shadow-2xl animate-pulse-glow overflow-hidden p-2 animate-float">
                   <Image
                     src="/logo.jpeg"
                     alt="PADMAI Logo"
-                    width={150}
-                    height={150}
+                    width={140}
+                    height={140}
+                    className="object-contain rounded-full"
+                    priority
+                  />
+                </div>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-brand-gold/40 text-3xl font-light"
+                >
+                  &times;
+                </motion.span>
+                <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/95 backdrop-blur-sm border-2 border-red-400/30 flex items-center justify-center shadow-2xl overflow-hidden p-2 animate-float" style={{ animationDelay: "0.5s" }}>
+                  <Image
+                    src="/kilbil-logo.jpeg"
+                    alt="Kilbil High School Logo"
+                    width={140}
+                    height={140}
                     className="object-contain rounded-full"
                     priority
                   />
@@ -235,25 +253,37 @@ export default function Home() {
               transition={{ duration: 0.6, type: "spring" }}
               className="flex flex-col items-center text-center max-w-2xl mx-auto"
             >
-              {/* Logo */}
+              {/* Logos */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", delay: 0.1, bounce: 0.5 }}
-                className="mb-8"
+                className="mb-8 flex items-center gap-5"
               >
                 <div className="relative">
-                  <div className="w-32 h-32 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center overflow-hidden p-2">
+                  <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center overflow-hidden p-2">
                     <Image
                       src="/logo.jpeg"
                       alt="PADMAI Logo"
-                      width={120}
-                      height={120}
+                      width={90}
+                      height={90}
                       className="object-contain rounded-full"
                     />
                   </div>
-                  {/* Spinning ring */}
                   <div className="absolute -inset-3 rounded-full border-2 border-transparent border-t-brand-gold border-r-brand-gold/50 animate-spin-slow" />
+                </div>
+                <span className="text-brand-gold/40 text-2xl font-light">&times;</span>
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full bg-white/95 backdrop-blur-sm border-2 border-red-400/30 flex items-center justify-center overflow-hidden p-2">
+                    <Image
+                      src="/kilbil-logo.jpeg"
+                      alt="Kilbil High School Logo"
+                      width={90}
+                      height={90}
+                      className="object-contain rounded-full"
+                    />
+                  </div>
+                  <div className="absolute -inset-3 rounded-full border-2 border-transparent border-t-red-400 border-r-red-400/50 animate-spin-slow" style={{ animationDirection: "reverse" }} />
                 </div>
               </motion.div>
 
@@ -288,7 +318,7 @@ export default function Home() {
                 transition={{ delay: 0.6 }}
                 className="text-lg md:text-xl text-gray-300 mb-4"
               >
-                The PADMAI app is being prepared for launch.
+                The Kilbil High School app is being prepared for launch.
               </motion.p>
 
               <motion.p
