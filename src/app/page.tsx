@@ -1,87 +1,36 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
+import Image from "next/image";
 
-type AppState = "welcome" | "countdown" | "launched";
+type AppState = "welcome" | "inprogress";
 
 export default function Home() {
   const [state, setState] = useState<AppState>("welcome");
-  const [count, setCount] = useState(5);
-
-  const fireConfetti = useCallback(() => {
-    const duration = 4000;
-    const end = Date.now() + duration;
-
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ["#6366f1", "#a855f7", "#ec4899", "#f59e0b", "#10b981"],
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ["#6366f1", "#a855f7", "#ec4899", "#f59e0b", "#10b981"],
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
-    frame();
-
-    // Big burst
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: { y: 0.6 },
-      colors: ["#6366f1", "#a855f7", "#ec4899", "#f59e0b", "#10b981"],
-    });
-  }, []);
-
-  useEffect(() => {
-    if (state !== "countdown") return;
-
-    if (count === 0) {
-      setState("launched");
-      fireConfetti();
-      return;
-    }
-
-    const timer = setTimeout(() => setCount((c) => c - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [state, count, fireConfetti]);
 
   const handleLaunch = () => {
-    setState("countdown");
-    setCount(5);
+    setState("inprogress");
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0f0f23] via-[#1a1a3e] to-[#0f0f23]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0d0d1a] via-[#1a1425] to-[#0d0d1a] flex flex-col">
       {/* Animated background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-indigo-500/20"
+            className="absolute w-1.5 h-1.5 rounded-full bg-brand-gold/15"
             initial={{
-              x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800),
+              x: `${Math.random() * 100}%`,
+              y: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [null, Math.random() * -200, Math.random() * 200],
-              x: [null, Math.random() * 100 - 50],
-              opacity: [0.2, 0.8, 0.2],
+              y: [null, `${Math.random() * 80}%`, `${Math.random() * 100}%`],
+              opacity: [0.15, 0.5, 0.15],
             }}
             transition={{
-              duration: 4 + Math.random() * 4,
+              duration: 5 + Math.random() * 5,
               repeat: Infinity,
               repeatType: "reverse",
             }}
@@ -89,60 +38,92 @@ export default function Home() {
         ))}
       </div>
 
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
+      {/* Main Content */}
+      <main className="relative z-10 flex flex-col items-center justify-center flex-1 px-4 py-12">
         <AnimatePresence mode="wait">
           {state === "welcome" && (
             <motion.div
               key="welcome"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.5 }}
               className="flex flex-col items-center text-center max-w-4xl mx-auto"
             >
-              {/* Logo / School Icon */}
+              {/* Logo */}
               <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", duration: 1, bounce: 0.5 }}
-                className="mb-8"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", duration: 1, bounce: 0.4 }}
+                className="mb-6 animate-float"
               >
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl animate-pulse-glow">
-                  <svg
-                    className="w-14 h-14 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
-                    />
-                  </svg>
+                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center shadow-2xl animate-pulse-glow overflow-hidden p-2">
+                  <Image
+                    src="/logo.jpeg"
+                    alt="PADMAI Logo"
+                    width={150}
+                    height={150}
+                    className="object-contain rounded-full"
+                    priority
+                  />
                 </div>
               </motion.div>
 
-              {/* Title */}
+              {/* App Name */}
               <motion.h1
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-gradient"
+                className="text-5xl md:text-7xl font-bold mb-2 bg-gradient-to-r from-brand-gold-light via-brand-gold to-brand-brown-light bg-clip-text text-transparent animate-gradient"
               >
-                Kilbil High School
+                PADMAI
               </motion.h1>
 
-              {/* Subtitle */}
+              {/* Collaboration line */}
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.45, duration: 0.6 }}
+                className="text-sm md:text-base text-brand-gold/70 tracking-widest uppercase mb-4"
+              >
+                In collaboration with Kilbil High School
+              </motion.p>
+
+              {/* Tagline */}
               <motion.p
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="text-xl md:text-2xl text-gray-300 mb-8"
+                className="text-xl md:text-2xl text-gray-300 mb-4"
               >
                 Your School, One App Away
               </motion.p>
+
+              {/* Since badge */}
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.4 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-gold/30 bg-brand-gold/5 mb-8"
+              >
+                <span className="text-brand-gold text-sm font-medium">Since 2008</span>
+              </motion.div>
+
+              {/* Live status banner */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.65, duration: 0.6 }}
+                className="mb-10 px-6 py-3 rounded-xl border border-amber-500/30 bg-amber-500/5 backdrop-blur-sm"
+              >
+                <p className="text-amber-300 text-base md:text-lg font-medium flex items-center gap-2">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+                  </span>
+                  Application will be live within 2 - 3 hours in progress
+                </p>
+              </motion.div>
 
               {/* Description */}
               <motion.p
@@ -152,9 +133,9 @@ export default function Home() {
                 className="text-gray-400 text-lg mb-12 max-w-2xl leading-relaxed"
               >
                 A complete school management solution that brings together{" "}
-                <span className="text-indigo-400 font-semibold">Parents</span>,{" "}
-                <span className="text-purple-400 font-semibold">Teachers</span>, and{" "}
-                <span className="text-pink-400 font-semibold">School Owners</span>{" "}
+                <span className="text-brand-blue-light font-semibold">Parents</span>,{" "}
+                <span className="text-brand-gold font-semibold">Teachers</span>, and{" "}
+                <span className="text-brand-brown-light font-semibold">School Owners</span>{" "}
                 on one unified platform.
               </motion.p>
 
@@ -174,8 +155,8 @@ export default function Home() {
                     "Direct teacher communication",
                     "Homework & event updates",
                   ]}
-                  gradient="from-blue-500/10 to-indigo-500/10"
-                  border="border-indigo-500/20"
+                  gradient="from-brand-blue/10 to-brand-blue-light/5"
+                  border="border-brand-blue/20"
                   delay={1.0}
                 />
                 <FeatureCard
@@ -187,8 +168,8 @@ export default function Home() {
                     "Grade management system",
                     "Parent-teacher meetings",
                   ]}
-                  gradient="from-purple-500/10 to-fuchsia-500/10"
-                  border="border-purple-500/20"
+                  gradient="from-brand-gold/10 to-brand-gold-light/5"
+                  border="border-brand-gold/20"
                   delay={1.2}
                 />
                 <FeatureCard
@@ -200,8 +181,8 @@ export default function Home() {
                     "Staff management",
                     "Analytics & insights",
                   ]}
-                  gradient="from-pink-500/10 to-rose-500/10"
-                  border="border-pink-500/20"
+                  gradient="from-brand-brown/10 to-brand-brown-light/5"
+                  border="border-brand-brown/20"
                   delay={1.4}
                 />
               </motion.div>
@@ -214,7 +195,7 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLaunch}
-                className="relative px-12 py-5 text-xl font-bold text-white rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-2xl animate-pulse-glow cursor-pointer overflow-hidden group"
+                className="relative px-12 py-5 text-xl font-bold text-white rounded-full bg-gradient-to-r from-brand-brown via-brand-gold to-brand-brown shadow-2xl animate-pulse-glow cursor-pointer overflow-hidden group"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   <svg
@@ -241,214 +222,193 @@ export default function Home() {
                 transition={{ delay: 2, duration: 0.6 }}
                 className="mt-6 text-sm text-gray-500"
               >
-                Click to begin the countdown to our app launch!
+                Click to check the launch status
               </motion.p>
             </motion.div>
           )}
 
-          {state === "countdown" && (
+          {state === "inprogress" && (
             <motion.div
-              key="countdown"
-              initial={{ opacity: 0, scale: 0.5 }}
+              key="inprogress"
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.5 }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center text-center"
-            >
-              <motion.p
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="text-2xl md:text-3xl text-gray-300 mb-8"
-              >
-                Launching in...
-              </motion.p>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={count}
-                  initial={{ scale: 0, rotateY: -90, opacity: 0 }}
-                  animate={{ scale: 1, rotateY: 0, opacity: 1 }}
-                  exit={{ scale: 0, rotateY: 90, opacity: 0 }}
-                  transition={{ type: "spring", duration: 0.5 }}
-                  className="relative"
-                >
-                  <div className="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center shadow-2xl">
-                    <span className="text-8xl md:text-9xl font-bold text-white">
-                      {count}
-                    </span>
-                  </div>
-                  {/* Ring animation */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full border-4 border-indigo-400"
-                    initial={{ scale: 1, opacity: 1 }}
-                    animate={{ scale: 1.5, opacity: 0 }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  />
-                  <motion.div
-                    className="absolute inset-0 rounded-full border-4 border-purple-400"
-                    initial={{ scale: 1, opacity: 1 }}
-                    animate={{ scale: 1.8, opacity: 0 }}
-                    transition={{ duration: 1, repeat: Infinity, delay: 0.3 }}
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 flex gap-2"
-              >
-                {[...Array(5)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className={`w-3 h-3 rounded-full ${
-                      i < 5 - count
-                        ? "bg-indigo-500"
-                        : "bg-gray-600"
-                    }`}
-                    animate={
-                      i < 5 - count
-                        ? { scale: [1, 1.3, 1] }
-                        : {}
-                    }
-                    transition={{ duration: 0.3 }}
-                  />
-                ))}
-              </motion.div>
-            </motion.div>
-          )}
-
-          {state === "launched" && (
-            <motion.div
-              key="launched"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, type: "spring" }}
+              transition={{ duration: 0.6, type: "spring" }}
               className="flex flex-col items-center text-center max-w-2xl mx-auto"
             >
-              {/* Success icon */}
+              {/* Logo */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", delay: 0.2, bounce: 0.6 }}
+                transition={{ type: "spring", delay: 0.1, bounce: 0.5 }}
                 className="mb-8"
               >
-                <div className="w-28 h-28 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-2xl">
-                  <motion.svg
-                    className="w-16 h-16 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m4.5 12.75 6 6 9-13.5"
+                <div className="relative">
+                  <div className="w-32 h-32 rounded-full bg-white/10 backdrop-blur-sm border-2 border-brand-gold/30 flex items-center justify-center overflow-hidden p-2">
+                    <Image
+                      src="/logo.jpeg"
+                      alt="PADMAI Logo"
+                      width={120}
+                      height={120}
+                      className="object-contain rounded-full"
                     />
-                  </motion.svg>
+                  </div>
+                  {/* Spinning ring */}
+                  <div className="absolute -inset-3 rounded-full border-2 border-transparent border-t-brand-gold border-r-brand-gold/50 animate-spin-slow" />
                 </div>
+              </motion.div>
+
+              {/* In Progress Badge */}
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3, type: "spring" }}
+                className="mb-6 px-6 py-2 rounded-full bg-amber-500/15 border border-amber-500/30"
+              >
+                <span className="text-amber-400 font-bold text-lg flex items-center gap-2">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+                  </span>
+                  In Progress
+                </span>
               </motion.div>
 
               <motion.h2
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
+                className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-brand-gold-light to-brand-gold bg-clip-text text-transparent"
               >
-                We&apos;re Live!
+                Almost There!
               </motion.h2>
 
               <motion.p
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="text-xl text-gray-300 mb-8"
+                className="text-lg md:text-xl text-gray-300 mb-4"
               >
-                Kilbil High School App is now available on Google Play Store!
+                The PADMAI app is being prepared for launch.
               </motion.p>
 
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="text-sm text-brand-gold/60 uppercase tracking-widest mb-8"
+              >
+                In collaboration with Kilbil High School
+              </motion.p>
+
+              {/* Progress info box */}
+              <motion.div
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="w-full max-w-md p-6 rounded-2xl bg-white/5 border border-brand-gold/15 backdrop-blur-sm"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-brand-gold/10 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-white font-semibold">Estimated Launch</p>
+                    <p className="text-gray-400 text-sm">Within 2 - 3 hours</p>
+                  </div>
+                </div>
+
+                {/* Progress steps */}
+                <div className="space-y-3">
+                  <ProgressStep label="App Development" done />
+                  <ProgressStep label="Testing & QA" done />
+                  <ProgressStep label="Play Store Review" active />
+                  <ProgressStep label="Going Live" />
+                </div>
+              </motion.div>
+
+              {/* Play Store placeholder */}
               <motion.a
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 1.0 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 href="https://play.google.com/store/apps/details?id=com.kilbil.highschool"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-black border-2 border-gray-700 rounded-xl hover:border-green-500 transition-all duration-300 shadow-xl"
+                className="mt-8 inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-gray-700 rounded-xl hover:border-brand-gold/50 transition-all duration-300 shadow-xl opacity-70 hover:opacity-100"
               >
                 <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M17.556 8.248l-3.764 3.752 3.764 3.752 4.247-2.392a1.003 1.003 0 0 0 0-1.72l-4.247-2.392z"
-                    fill="#FBBC04"
-                  />
-                  <path
-                    d="M3.609 1.814l10.183 10.183 3.764-3.749L6.534.527C6.1.298 5.594.254 5.13.4c-.226.07-.438.183-.624.343l-.002.002-.894.87-.001.2z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M3.609 22.186l.895.869.001.002c.186.16.398.274.624.343.464.146.97.102 1.404-.127l11.022-5.72-3.763-3.753-10.183 10.186z"
-                    fill="#EA4335"
-                  />
+                  <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92z" fill="#4285F4" />
+                  <path d="M17.556 8.248l-3.764 3.752 3.764 3.752 4.247-2.392a1.003 1.003 0 0 0 0-1.72l-4.247-2.392z" fill="#FBBC04" />
+                  <path d="M3.609 1.814l10.183 10.183 3.764-3.749L6.534.527C6.1.298 5.594.254 5.13.4c-.226.07-.438.183-.624.343l-.002.002-.894.87-.001.2z" fill="#34A853" />
+                  <path d="M3.609 22.186l.895.869.001.002c.186.16.398.274.624.343.464.146.97.102 1.404-.127l11.022-5.72-3.763-3.753-10.183 10.186z" fill="#EA4335" />
                 </svg>
                 <div className="text-left">
-                  <p className="text-xs text-gray-400 uppercase tracking-wider">
-                    Get it on
-                  </p>
-                  <p className="text-lg font-semibold text-white">
-                    Google Play
-                  </p>
+                  <p className="text-xs text-gray-400 uppercase tracking-wider">Coming soon on</p>
+                  <p className="text-lg font-semibold text-white">Google Play</p>
                 </div>
               </motion.a>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="mt-12 grid grid-cols-3 gap-8 text-center"
-              >
-                <div>
-                  <p className="text-3xl font-bold text-indigo-400">3</p>
-                  <p className="text-sm text-gray-400">User Roles</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-purple-400">20+</p>
-                  <p className="text-sm text-gray-400">Features</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-bold text-pink-400">1</p>
-                  <p className="text-sm text-gray-400">Platform</p>
-                </div>
-              </motion.div>
 
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
+                transition={{ delay: 1.3 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  setState("welcome");
-                  setCount(5);
-                }}
-                className="mt-10 px-6 py-3 text-sm text-gray-400 border border-gray-700 rounded-full hover:text-white hover:border-gray-500 transition-all cursor-pointer"
+                onClick={() => setState("welcome")}
+                className="mt-8 px-6 py-3 text-sm text-gray-400 border border-gray-700 rounded-full hover:text-white hover:border-brand-gold/40 transition-all cursor-pointer"
               >
-                Watch Again
+                Back to Home
               </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/5 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.jpeg"
+                alt="PADMAI"
+                width={36}
+                height={36}
+                className="rounded-full"
+              />
+              <div>
+                <p className="text-sm font-semibold text-brand-gold">PADMAI</p>
+                <p className="text-xs text-gray-500">In collaboration with Kilbil High School</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-brand-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+                <span>Kishor Nerkar</span>
+              </div>
+              <a href="tel:9021487657" className="flex items-center gap-2 hover:text-brand-gold transition-colors">
+                <svg className="w-4 h-4 text-brand-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                </svg>
+                <span>9021487657</span>
+              </a>
+              <a href="mailto:kishornerkar258@gmail.com" className="flex items-center gap-2 hover:text-brand-gold transition-colors">
+                <svg className="w-4 h-4 text-brand-gold/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                </svg>
+                <span>kishornerkar258@gmail.com</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -481,11 +441,44 @@ function FeatureCard({
       <ul className="text-sm text-gray-400 space-y-2 text-left">
         {features.map((f, i) => (
           <li key={i} className="flex items-start gap-2">
-            <span className="text-indigo-400 mt-0.5">&#x2022;</span>
+            <span className="text-brand-gold mt-0.5">&#x2022;</span>
             {f}
           </li>
         ))}
       </ul>
     </motion.div>
+  );
+}
+
+function ProgressStep({ label, done, active }: { label: string; done?: boolean; active?: boolean }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div
+        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+          done
+            ? "bg-green-500/20 text-green-400 border border-green-500/30"
+            : active
+            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+            : "bg-gray-700/30 text-gray-500 border border-gray-700/30"
+        }`}
+      >
+        {done ? (
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+        ) : active ? (
+          <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+        ) : (
+          <div className="w-2 h-2 rounded-full bg-gray-600" />
+        )}
+      </div>
+      <span
+        className={`text-sm ${
+          done ? "text-green-400" : active ? "text-amber-300" : "text-gray-500"
+        }`}
+      >
+        {label}
+      </span>
+    </div>
   );
 }

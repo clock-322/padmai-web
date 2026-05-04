@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0f23;
+  --background: #0d0d1a;
   --foreground: #ededed;
 }
 
@@ -10,6 +10,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand-brown: #6b4226;
+  --color-brand-brown-light: #8b5e3c;
+  --color-brand-gold: #c5a55a;
+  --color-brand-gold-light: #dcc07e;
+  --color-brand-blue: #2b5ea7;
+  --color-brand-blue-light: #4a7ec7;
 }
 
 body {
@@ -26,17 +33,22 @@ body {
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  50% { transform: translateY(-15px); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8), 0 0 60px rgba(168, 85, 247, 0.4); }
+  0%, 100% { box-shadow: 0 0 20px rgba(197, 165, 90, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(197, 165, 90, 0.6), 0 0 60px rgba(107, 66, 38, 0.3); }
 }
 
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .animate-gradient {
@@ -56,4 +68,8 @@ body {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
 }
